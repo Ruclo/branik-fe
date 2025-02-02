@@ -1,7 +1,8 @@
 <script lang="ts">
 import { onMount } from "svelte";
 let pouring: boolean = $state(false);
-let { filled = $bindable(false) } = $props()
+let filled: boolean = $state(false);
+let { delay, animationEndCallback = null } = $props()
 
 function updateScale(): void {
   const scale = Math.max(1, Math.min(window.innerWidth / 500, 2));
@@ -9,11 +10,14 @@ function updateScale(): void {
 }
 
 
+function handleAnimationEnd(): void {
+  filled = true;
+  setTimeout(animationEndCallback, delay);
+}
+
 function pourBeer(): void {
     pouring = true;
-    setTimeout(function(): void { 
-        filled = true;
-    }, 1500);
+    setTimeout(handleAnimationEnd, 1500);
 }
 
 onMount(() => {
